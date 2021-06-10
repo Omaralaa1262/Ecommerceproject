@@ -1,7 +1,13 @@
 package com.example.ecommerceproject;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,30 +37,69 @@ public class MainActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
     }}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextView logout=(TextView)findViewById(R.id.logouttxt);
+
+        Ecommercehelper Helper=new Ecommercehelper(this);
+        TextView username=(TextView)findViewById(R.id.username);
+        Button showcartmainactivity =(Button)findViewById(R.id.shoppingcart_mainactivity);
+        String User_Name=getIntent().getStringExtra("User_Name");
+
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
-
-        List<Categories> productCategoryList = new ArrayList<>();
-        productCategoryList.add(new Categories("1", "Trending"));
-        productCategoryList.add(new Categories("2", "Most Popular"));
-        productCategoryList.add(new Categories("3", "All Body Products"));
-        productCategoryList.add(new Categories("4", "Skin Care"));
-        productCategoryList.add(new Categories("5", "Hair Care"));
-        productCategoryList.add(new Categories("6", "Make Up"));
-        productCategoryList.add(new Categories("7", "Fragrance"));
-
-        setProductRecycler(productCategoryList);
-
+        username.setText(User_Name);
+        List<Categories> cat = new ArrayList<>();
         List<Products> productsList = new ArrayList<>();
+        Cursor cat_data=Helper.getCategories();
+        Cursor product_data=Helper.getproducts();
+        ImageView searchibtn=(ImageView)findViewById(R.id.SearchButton_image);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(MainActivity.this,sighnin.class);
+                i.putExtra("flage","1");
+                startActivity(i);
 
-        //productsList.add(new Products(1, "Japanese Cherry Blossom", "250 ml", "$ 17.00", R.drawable.prod2));
-        setProdItemRecycler(productsList);
+            }
+        });
+        searchibtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(MainActivity.this,search.class);
+                startActivity(i);
+
+            }
+        });
+        if(cat_data.moveToFirst()){
+            while (!cat_data.isAfterLast()){
+                cat.add(new Categories(cat_data.getString(0),cat_data.getString(1)));
+                cat_data.moveToNext();
+            }
+        }
+        if(product_data.moveToFirst()){
+            while (!product_data.isAfterLast()){
+                productsList.add(new Products(product_data.getInt(0),product_data.getString(1),product_data.getString(2),product_data.getString(3),product_data.getInt(4),product_data.getInt(5)));
+                product_data.moveToNext();
+            }
+        }
+        setProductRecycler(cat);
+        setProdItemRecycler(productsList,User_Name);
+
+
+        showcartmainactivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(MainActivity.this,shopping.class);
+                i.putExtra("User_Name",User_Name);
+                startActivity(i);
+
+            }
+        });
     }
 
     private void setProductRecycler(List<Categories> productCategoryList){
@@ -67,43 +112,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setProdItemRecycler(List<Products> productsList){
+    private void setProdItemRecycler(List<Products> productsList,String username){
 
         prodItemRecycler = findViewById(R.id.product_recycler);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         prodItemRecycler.setLayoutManager(layoutManager);
-        productAdapter = new ProductAdapter(this, productsList);
+        productAdapter = new ProductAdapter(this, productsList,username);
         prodItemRecycler.setAdapter(productAdapter);
 
     }
-
-    // Hi all today we are going to make a online product selling app.
-    // basically its a cosmatic selling app.
-    // The design is very coll and something new from traditional design.
-    // But before getting started lets make sure to subscribe and hit
-    // the bell icon to get latest update and notified enerytime i post a new video.
-    // so lets get started
-    // lets app some font and import some image assets
-    // Now we will setup a recyclerview for product category list.
-    // now we will ad a model class for our category
-    // lets create a adapter class for data model
-    // Our adapter class is ready Now we will setup recyclerview
-    //now we will add some data to our model class
-    // Lets run and see
-    // so we have setup category recycler.
-    // Now in a same way we create a another recycycler view for products
-    // first we make model class then adapter
-    // product recycler also setup.
-    // now we will setup on clicklistener on products and navigate to details activity.
-    // lets do this.
-    // before going to details page we need cart button in home page and some layout setup.
-    // Now its perfect
-    // lets move to the details activity.
-    // so lets add some animation in this.
-    // So this tutorial has been completed if you love my work plz like share and subscribe
-    // and dont forget to comments
-    // see you in the next video
-
-
-
 }

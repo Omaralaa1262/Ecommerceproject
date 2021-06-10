@@ -2,13 +2,8 @@ package com.example.ecommerceproject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import model.Categories;
-import model.Products;
-import model.User_Details;
-
+import android.database.sqlite.*;
+import model.*;
 
 public class Ecommercehelper extends SQLiteOpenHelper {
     private static String Database_Name="Ecommerce";
@@ -17,6 +12,7 @@ public class Ecommercehelper extends SQLiteOpenHelper {
     private  String OrderTableName = "ORDER_Table";
     private  String ProductTableName = "PRODUCT";
     private  String OrderDetalsTableName = "ORDERDETAILS";
+    private  String shoppingcarttable = "ShoppingCart";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +25,7 @@ public class Ecommercehelper extends SQLiteOpenHelper {
     private  String ColumnPassword = "password";
     private  String ColumnEmail = "email";
     private  String ColumnMobile = "mobile";
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     private  String CategoryCAT_IDColumn = "CAT_ID";
@@ -48,6 +45,8 @@ public class Ecommercehelper extends SQLiteOpenHelper {
     private  String ProductsPRICEColumn = "PRICE";
     private  String ProductsQUANTITYColumn = "QUANTITY";
     private  String ProductsCATIDColumn = "CATID";
+    private  String ProductsBARCODEColumn = "BARCODE";
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +54,15 @@ public class Ecommercehelper extends SQLiteOpenHelper {
     private  String OrderdetailsITEM_QUANTITYColumn = "ITEM_QUANTITY";
     private  String OrderdetailsORDERIDColumn = "ORDERID";
     private  String OrderdetailsPRODUCTIDColumn = "PRODUCTID";
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    private  String shoppingCart_id = "Cart_id";
+    private  String shoppingusername = "username";
+    //private  String shoppingproduct_cart_id="product_cart_id";
+    private  String shoppingproductName="ProductName";
+    private  String shopping_product_QYT="product_product_QYT";
+    private  String shoppingactive="active";
+    private  String shoppingproduct_price1="product_price";
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Table User Queries
@@ -91,7 +99,7 @@ public class Ecommercehelper extends SQLiteOpenHelper {
     public String CreateProductTable= "CREATE TABLE IF NOT EXISTS "+ ProductTableName+
             " ( "
             +"PRO_ID INTEGER PRIMARY KEY autoincrement "
-            +",PRO_NAME TEXT,PRICE TEXT,QUANTITY TEXT,CATID INTEGER"
+            +",PRO_NAME TEXT,PRICE TEXT,QUANTITY TEXT,CATID INTEGER,BARCODE INTEGER"
             +",FOREIGN KEY(CATID) REFERENCES "+CategoryTableName+"(CAT_ID))";
     public String DeleteProductTableQuery = "DROP TABLE IF EXISTS " + ProductTableName;
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,21 +112,31 @@ public class Ecommercehelper extends SQLiteOpenHelper {
             +",FOREIGN KEY(PRODUCTID) REFERENCES "+ ProductTableName+"(PRO_ID))";
     public String DeleteOrderDetailsTableQuery = "DROP TABLE IF EXISTS " + OrderDetalsTableName;
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    public String CreateshoppingcartTable ="CREATE TABLE IF NOT EXISTS "+ shoppingcarttable+
+            " ( "
+            +"Cart_id INTEGER PRIMARY KEY autoincrement"
+            +",username TEXT,product_product_QYT TEXT,active TEXT,ProductName TEXT,product_price TEXT)";
+
+    public String DeleteshoppingcartTableQuery = "DROP TABLE IF EXISTS " + shoppingcarttable;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     SQLiteDatabase ecommerccDB;
-    public Ecommercehelper(Context context){
+    public Ecommercehelper(Context context)
+    {
         super(context,Database_Name,null,1);
     }
     @Override
     public void onCreate(SQLiteDatabase db)
-    {   db.execSQL(CreateQueryUserTable);
+    {
+
+        db.execSQL(CreateQueryUserTable);
         db.execSQL(CreateCategoryTable);
         //db.execSQL("insert into "+CategoryTableName+"("+CategoryCAT_NAMEColumn+")VALUES('TVs')");
         db.execSQL(CreateOrderDetailsTable);
         db.execSQL(CreateProductTable);
         db.execSQL(CreateOrderTable);
-
-
+        db.execSQL(CreateshoppingcartTable);
         Products Product;
         Categories Category;
         ContentValues Values = new ContentValues();
@@ -134,53 +152,44 @@ public class Ecommercehelper extends SQLiteOpenHelper {
         Insert_newCategory(Category,db);
         Category =new Categories("Kitchen");
         Insert_newCategory(Category,db);
-        Product =new Products("Samsung 50 inch","6899","5",1,"56655558");
+        Product =new Products("Samsung 50 inch","6899","5",1,56655558);
         Insert_newProduct(Product,db);
-        Product =new Products("LG 50 inch","6499","6",1,"65986588");
+        Product =new Products("LG 50 inch","6499","6",1,65986588);
         Insert_newProduct(Product,db);
-        Product =new Products("Toshiba Smart LED 43 inch","5999","10",1,"54668129");
+        Product =new Products("Toshiba Smart LED 43 inch","5999","10",1,54668129);
         Insert_newProduct(Product,db);
-        Product =new Products("Fresh 32inch LED HD Smart Android","2500","6",1,"64689665");
+        Product =new Products("Fresh 32inch LED HD Smart Android","2500","6",1,64689665);
         Insert_newProduct(Product,db);
-        Product =new Products("Samsung Galaxy M11 32GB","2099","20",2,"5646565");
+        Product =new Products("Samsung Galaxy M11 32GB","2099","20",2,65646565);
         Insert_newProduct(Product,db);
-        Product =new Products("Relme C15","2990","1",2,"4564645");
+        Product =new Products("Relme C15","2990","1",2,45646456);
         Insert_newProduct(Product,db);
-        Product =new Products("infinix Note 5 32GB","2333","5",2,"5665546");
+        Product =new Products("infinix Note 5 32GB","2333","5",2,56655466);
         Insert_newProduct(Product,db);
-        Product =new Products("Apple iphone 12 pro max 256GB","24957","1",2,"8598988");
+        Product =new Products("Apple iphone 12 pro max 256GB","24957","1",2,85989888);
         Insert_newProduct(Product,db);
-        Product =new Products("Apple iphone 11 128 GB","14444","0",2,"6565656");
+        Product =new Products("Apple iphone 11 128 GB","14444","0",2,65656566);
         Insert_newProduct(Product,db);
-        Product =new Products("Apple iphone 12 pro","16969","2",2,"5466665");
+        Product =new Products("Apple iphone 12 pro","16969","2",2,54666656);
         Insert_newProduct(Product,db);
-        Product =new Products("Samsung Galaxy S20","12998","5",2,"6565664210");
+        Product =new Products("Samsung Galaxy S20","12998","5",2,65656642);
         Insert_newProduct(Product,db);
-        Product =new Products("JAC Microwave","1499","1",3,"65656");
+        Product =new Products("JAC Microwave","1499","1",3,65656969);
         Insert_newProduct(Product,db);
-        Product =new Products("Akai Stand Fan","459","0",3,"6546665");
+        Product =new Products("Akai Stand Fan","459","0",3,65466695);
         Insert_newProduct(Product,db);
-        Product =new Products("kiriazy freezer 5 drawers","6899","2",3,"987556465");
+        Product =new Products("kiriazy freezer 5 drawers","6899","2",3,98755645);
         Insert_newProduct(Product,db);
-        Product =new Products("Kenwood ceramic steam iron","560","45",3,"54665665");
+        Product =new Products("Kenwood ceramic steam iron","560","45",3,54665665);
         Insert_newProduct(Product,db);
-        Product =new Products("Mienta Hot plate small flame 500Watt","218","50",3,"6556660");
+        Product =new Products("Mienta Hot plate small flame 500Watt","218","50",3,65566606);
         Insert_newProduct(Product,db);
-        Product =new Products("Home Stand Mixer 1200Watt","2498","2",4,"6656665688");
+        Product =new Products("Home Stand Mixer 1200Watt","2498","2",4,66566658);
         Insert_newProduct(Product,db);
-        Product =new Products("Fresh Elshaba7 Blender","324","10",4,"6856866");
+        Product =new Products("Fresh Elshaba7 Blender","324","10",4,68568866);
         Insert_newProduct(Product,db);
-        Product =new Products("Braun Hand Blender","1749","55",4,"56565658");
+        Product =new Products("Braun Hand Blender","1749","55",4,56565658);
         Insert_newProduct(Product,db);
-
-
-
-
-
-
-
-
-
 
     }
     @Override
@@ -190,11 +199,13 @@ public class Ecommercehelper extends SQLiteOpenHelper {
         db.execSQL(DeleteOrderDetailsTableQuery);
         db.execSQL(DeleteProductTableQuery);
         db.execSQL(DeleteOrderTableQuery);
+        db.execSQL(DeleteshoppingcartTableQuery);
         onCreate(db);
     }
     public User_Details Authenticate(User_Details user)
     {
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db;
+        db = getReadableDatabase();
         Cursor cursor = db.query(UserTableName, new String[]
                         { ColumnID,ColumnUsername ,ColumnFirstName,ColumnLastName,Columnbirthday,Columngender, ColumnEmail,ColumnPassword,ColumnMobile },
                 ColumnUsername + "=?", new String[] { user.Username }, null, null, null);
@@ -202,13 +213,13 @@ public class Ecommercehelper extends SQLiteOpenHelper {
         {
             User_Details user1 = new User_Details(cursor.getString(7));
             if (user.Password.equalsIgnoreCase(user1.Password)){
-                return user1;
 
+                return user1;
             }
         }
         return null;
     }
-    public void Register( User_Details user)
+    public void Register(User_Details user)
     {
         ContentValues Values = new ContentValues();
         Values.put(ColumnUsername, user.Username);
@@ -219,7 +230,7 @@ public class Ecommercehelper extends SQLiteOpenHelper {
         Values.put(ColumnPassword, user.Password);
         Values.put(ColumnEmail, user.Email);
         Values.put(ColumnMobile, user.Mobile);
-        ecommerccDB=getWritableDatabase();
+        ecommerccDB=getReadableDatabase();
         ecommerccDB.insert(UserTableName, null, Values);
         ecommerccDB.close();
     }
@@ -227,6 +238,7 @@ public class Ecommercehelper extends SQLiteOpenHelper {
         ContentValues Values = new ContentValues();
         Values.put(CategoryCAT_NAMEColumn,category.CategoryName);
         db.insert(CategoryTableName, null, Values);
+
     }
     public void Insert_newProduct(Products Products,SQLiteDatabase db){
         ContentValues Values = new ContentValues();
@@ -234,8 +246,86 @@ public class Ecommercehelper extends SQLiteOpenHelper {
         Values.put(ProductsPRICEColumn,Products.ProPrice);
         Values.put(ProductsQUANTITYColumn,Products.ProQuantity);
         Values.put(ProductsCATIDColumn,(Integer)Products.Pro_CatID);
+        Values.put(ProductsBARCODEColumn,(Integer)Products.barcode);
         db.insert(ProductTableName, null, Values);
+
+    }
+    public Cursor getCategories(){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = new String[] { CategoryCAT_IDColumn,CategoryCAT_NAMEColumn};
+        Cursor cursorgetcategory = db.query(CategoryTableName, columns, null, null, null, null, null);
+        if (cursorgetcategory != null) {
+            cursorgetcategory.moveToFirst();
+        }
+
+        return cursorgetcategory;
+    }
+    public Cursor getproducts(){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = new String[] { ProductsPRO_IDColumn,ProductsPRO_NAMEColumn,ProductsPRICEColumn,ProductsQUANTITYColumn,ProductsCATIDColumn,ProductsBARCODEColumn};
+        Cursor cursorgetProducts = db.query(ProductTableName, columns, null, null, null, null, null);
+        if (cursorgetProducts != null) {
+            cursorgetProducts.moveToFirst();
+        }
+
+        return cursorgetProducts;
+    }
+    public Cursor getshoppingcart(String Username){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = new String[] {shoppingusername,shoppingproductName,shopping_product_QYT,shoppingactive,shoppingproduct_price1};
+        Cursor cursergetshoping = db.query(shoppingcarttable, columns, shoppingusername + "= ? And " +shoppingactive + "= ?", new String[] { Username,"1" }, null, null, null);
+        if (cursergetshoping != null) {
+            cursergetshoping.moveToFirst();
+        }
+
+        return cursergetshoping;
+    }
+    public void Insert_ShoppingCart(shopping_cart shoppingCart){
+        ContentValues Values = new ContentValues();
+        Values.put(shoppingusername,shoppingCart.username);
+        Values.put(shopping_product_QYT,shoppingCart.product_QYT);
+        Values.put(shoppingactive,shoppingCart.active);
+        Values.put(shoppingproductName,shoppingCart.productname);
+        Values.put(shoppingproduct_price1,shoppingCart.product_price);
+
+        ecommerccDB=getWritableDatabase();
+        ecommerccDB.insert(shoppingcarttable, null, Values);
+        ecommerccDB.close();
+    }
+    public Cursor gettotal(String Username){
+        SQLiteDatabase db = getReadableDatabase();
+        String columns = "select sum(product_price) * product_product_QYT from shoppingcart where " + shoppingusername+ " = ? And "+shoppingactive+" = ? ";
+        Cursor cursergetshoping = db.rawQuery(columns,new String[] { Username,"1" });
+        if (cursergetshoping != null) {
+            cursergetshoping.moveToFirst();
+        }
+        return cursergetshoping;
+    }
+    public void updateactive(String Username,String productname){
+        SQLiteDatabase db = getReadableDatabase();
+        String columns = "update shoppingcart set active=0 where " + shoppingusername+" = ? And "+shoppingproductName +" = ? ";
+        Cursor cursergetshoping = db.rawQuery(columns,new String[] { Username,productname });
+        if (cursergetshoping != null) {
+            cursergetshoping.moveToFirst();
+        }
+        cursergetshoping.close();
     }
 
-}
+
+
+    /*public Cursor getproductcategory(){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = new String[] { ProductsPRO_IDColumn,ProductsPRO_NAMEColumn,ProductsPRICEColumn,ProductsQUANTITYColumn};
+        Cursor cursorgetProducts = db.query(ProductTableName, columns, null, null, null, null, null);
+        if (cursorgetProducts != null) {
+            cursorgetProducts.moveToFirst();
+        }
+        String[] columns = new String[] { CategoryCAT_IDColumn,CategoryCAT_NAMEColumn};
+        Cursor cursorgetcategory = db.query(CategoryTableName, columns, null, null, null, null, null);
+        return cursorgetProducts;
+    }*/
+
+    }
+
+
 

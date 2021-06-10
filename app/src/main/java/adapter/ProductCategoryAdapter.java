@@ -52,7 +52,6 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-
             catagoryName = itemView.findViewById(R.id.cat_name);
 
         }

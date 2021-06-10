@@ -6,20 +6,6 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/prod_image"
-        android:layout_width="250dp"
-        android:layout_height="500dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:transitionName="image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/prod2" />
-
-    <ImageView
         android:id="@+id/imageView6"
         android:layout_width="39dp"
         android:layout_height="42dp"
@@ -35,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/rubik_medium"
-        android:text="Size"
+        android:text="Avilable Quantity"
         app:layout_constraintStart_toStartOf="@+id/prod_name"
         app:layout_constraintTop_toBottomOf="@+id/prod_name" />
 
@@ -89,7 +75,7 @@
         android:fontFamily="@font/rubik_bold"
         android:text="Japanese Cherry Blossom"
         android:textColor="@android:color/background_dark"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
