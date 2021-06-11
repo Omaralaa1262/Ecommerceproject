@@ -116,14 +116,6 @@ public class sighnin extends AppCompatActivity {
         if (Password.isEmpty()) {
             valid = false;
             editTextPassword.setError("Please enter valid password!");
-        } else {
-            if (Password.length() > 5) {
-                valid = true;
-                editTextPassword.setError(null);
-            } else {
-                valid = false;
-                editTextPassword.setError("Password is to short!");
-            }
         }
         return valid;
     }
